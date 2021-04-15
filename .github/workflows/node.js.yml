@@ -1,9 +1,5 @@
 name: Node.js CI
-
-on:
-  push:
-    branches:
-    - development
+on: [push, pull_request]
 
 jobs:
   test:
@@ -22,8 +18,8 @@ jobs:
     - name: Install dependencies
       run: npm install
 
-    - name: Build
-      run: npm run build
+    - name: Lint
+      run: npm run lint
 
     env:
       CI: true
