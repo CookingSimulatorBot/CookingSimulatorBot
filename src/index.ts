@@ -82,6 +82,6 @@ const checkMessage = (message: Message) => {
         message.reply('All new information about the CS VR release can be found in <#587658747220983817>.');
     }
 };
-let token = "ODI2MzU0MjAyMjUwNDQ0ODEy.YGLQUg.gf4QQf_GeLznvh9kix2I8ng89Gc"
+const token = 'ODI2MzU0MjAyMjUwNDQ0ODEy.YGLQUg.gf4QQf_GeLznvh9kix2I8ng89Gc'
 // Login
 client.login();
