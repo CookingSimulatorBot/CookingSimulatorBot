@@ -31,20 +31,20 @@ export const create: Command['create'] = {
 
 export const execute = async (client: Client, interaction: CommandInteraction): Promise<void> => {
 
-    const guild = client.guilds.cache.get(interaction.guildID as string) as Guild;
+    const guild = client.guilds.cache.get(interaction.guildId as `${bigint}`) as Guild;
 
     // Grab important informations
     const executor: GuildMember = interaction.member as GuildMember;
-    const target: GuildMember = interaction.options.find(o => o.name == 'user')?.member as GuildMember;
+    const target: GuildMember = interaction.options.getMember('user', true) as GuildMember;
     const targetUser: User = target.user;
 
     let reason = '';
-    if (interaction.options.find(o => o.name.toLowerCase() == 'reason')) {
-        reason = interaction.options.find(o => o.name.toLowerCase() == 'reason')?.value as string;
+    if (interaction.options.getString('reason', false)) {
+        reason = interaction.options.getString('reason', true);
     }
     let purge = false;
-    if (interaction.options.find(o => o.name.toLowerCase() == 'deletemessages')) {
-        purge = interaction.options.find(o => o.name.toLowerCase() == 'deletemessages')?.value as boolean;
+    if (interaction.options.getString('deletemessages', false)) {
+        purge = interaction.options.getBoolean('deletemessages', true);
     }
 
     // Check if permissions are valid

@@ -19,13 +19,13 @@ export const create: Command['create'] = {
 export const execute: Command['execute'] = async (client: Client, interaction: CommandInteraction): Promise<void> => {
     // Abort if not the correct channel
     const allowedChannels: string[] = ['732174841095913472', '818159338186473532'];
-    if (!allowedChannels.includes(interaction.channelID || '')) {
+    if (!allowedChannels.includes(interaction.channelId || '')) {
         return (interaction.editReply('You are not in the correct channel. Please use <#818159338186473532>.') as unknown) as void;
     }
 		
     let member: GuildMember;
-    if (interaction.options.length > 0) {
-        member = interaction.options[0].member as GuildMember;
+    if (interaction.options.data.length > 0) {
+        member = interaction.options.getMember('user', false) as GuildMember;
     } else {
         member = interaction.member as GuildMember;
     }
@@ -58,7 +58,7 @@ export const execute: Command['execute'] = async (client: Client, interaction: C
     // Create sexy embed!
     const embedMentioned = {
         color: 0x00ffff,
-        title: (member.displayName) + ' - ' + getStatus(member.presence.status),
+        title: (member.displayName) + ' - ' + getStatus(member?.presence?.status || 'offline'),
         thumbnail: {
             url: member.user.displayAvatarURL(),
         },

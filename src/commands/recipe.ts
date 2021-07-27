@@ -38,7 +38,7 @@ export const create: Command['create'] = {
 
 export const execute: Command['execute'] = async (client: Client, interaction: CommandInteraction): Promise<void> => {
     // Informations
-    const mode = interaction.options[0].value;
+    const mode = interaction.options.getString('mode', true);
 
     let recipesMode: string[] = [];
     switch (mode) {
