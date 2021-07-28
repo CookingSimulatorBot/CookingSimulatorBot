@@ -38,7 +38,7 @@ export const create: Command['create'] = {
 };
 
 export const execute: Command['execute'] = async (client: Client, interaction: CommandInteraction): Promise<void> => {
-    const category: string = interaction.options[0].value as string;
+    const category: string = interaction.options.getString('category', true);
     let image = '';
     let fact = '';
 
@@ -49,7 +49,7 @@ export const execute: Command['execute'] = async (client: Client, interaction: C
                 image = await api.image.cat();
             }
 
-            fact = (await catFacts.random())[0].text;
+            fact = (catFacts.random())[0].text;
             break;
         }
         case 'dog': {
@@ -79,5 +79,5 @@ export const execute: Command['execute'] = async (client: Client, interaction: C
         .setDescription(fact)
         .setImage(image);
 
-    await interaction.editReply(embed);
+    await interaction.editReply({ embeds: [embed] });
 };

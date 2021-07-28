@@ -33,7 +33,7 @@ export const create: Command['create'] = {
 };
 
 export const execute: Command['execute'] = async (client: Client, interaction: CommandInteraction): Promise<void> => {
-    const category = interaction.options[0].value;
+    const category = interaction.options.getString('category', true);
 		
     let joke = '';
 
@@ -55,5 +55,5 @@ export const execute: Command['execute'] = async (client: Client, interaction: C
     const embed = new MessageEmbed()
         .setDescription(joke);
 
-    await interaction.editReply(embed);
+    await interaction.editReply({ embeds: [embed] });
 };

@@ -50,7 +50,7 @@ client.on('message', (message) => {
                 embed.addField('Error', `\`\`\`${clean(err.toString())}\`\`\``);
             }
 
-            message.channel.send(embed);
+            message.channel.send({ embeds: [embed] });
         }
     }
 });
@@ -67,9 +67,9 @@ client.on('interaction', async (interaction) => {
             const command = client.commands.get(interaction.commandName);
             if (!command) return console.log('No command found.');
 
-            if (!interaction.guildID) return interaction.reply('Hell no!', { ephemeral: true });
+            if (!interaction.guildId) return interaction.reply({ content: 'Hell no!',  ephemeral: true });
 
-            interaction.defer(command.hidden ? true : false);
+            interaction.defer({ ephemeral: command.hidden ? true : false });
             await command.execute(client, interaction);
         } catch (error) {
             console.error(error);
