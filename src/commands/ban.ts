@@ -26,8 +26,8 @@ export const create: Command['create'] = {
 export const execute: Command['execute'] = async (client: Client, interaction: CommandInteraction): Promise<void> => {
     // Grab important informations
     const executor: GuildMember = interaction.member as GuildMember;
-    const target: GuildMember = interaction.options.getMember('user', false) as GuildMember;
-    const reason: string = interaction.options.getString('reason', false) ||  '';
+    const target: GuildMember = interaction.options.getMember('user', true) as GuildMember;
+    const reason: string = interaction.options.getString('reason') ||  '';
 
     // Return error if executor or target are invalid
     if (!executor || !target) return (interaction.editReply('Something went wrong!') as unknown) as void;

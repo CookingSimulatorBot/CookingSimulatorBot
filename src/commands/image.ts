@@ -49,7 +49,7 @@ export const execute: Command['execute'] = async (client: Client, interaction: C
                 image = await api.image.cat();
             }
 
-            fact = (catFacts.random())[0].text;
+            fact = (await catFacts.random())[0].text;
             break;
         }
         case 'dog': {
