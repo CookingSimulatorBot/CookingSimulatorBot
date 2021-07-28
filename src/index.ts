@@ -17,7 +17,6 @@ client.commands = new Collection();
 // Events
 client.on('ready', async () => {
     console.log('Client ready to rumble!');
-    console.log('Reminder: GuildMember has to be changed soon to InteractionMember');
 
     const commandFiles = fs.readdirSync('./dist/commands/').filter(file => file.endsWith('.js'));
     for (const file of commandFiles) {
@@ -26,7 +25,7 @@ client.on('ready', async () => {
     }
 });
 
-client.on('message', (message) => {
+client.on('messageCreate', (message) => {
     // Check for "release"
     if (message.channel.id == '767708787967918081') return checkMessage(message);
     // Eval
@@ -51,11 +50,17 @@ client.on('message', (message) => {
             }
 
             message.channel.send({ embeds: [embed] });
+        } else if (command == 'deploy') {
+            client.commands.each(c => {
+                message.guild?.commands.create(c.create).catch(e => {
+                    message.react('❌')
+                });
+            });
         }
     }
 });
 
-client.on('interaction', async (interaction) => {
+client.on('interactionCreate', async (interaction) => {
     if (!interaction.isCommand()) return;
 
     const today = new Date();
@@ -69,7 +74,7 @@ client.on('interaction', async (interaction) => {
 
             if (!interaction.guildId) return interaction.reply({ content: 'Hell no!',  ephemeral: true });
 
-            interaction.defer({ ephemeral: command.hidden ? true : false });
+            await interaction.defer({ ephemeral: command.hidden ? true : false });
             await command.execute(client, interaction);
         } catch (error) {
             console.error(error);

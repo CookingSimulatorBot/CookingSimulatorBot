@@ -22,7 +22,7 @@ export const create: Command['create'] = {
             type: 'STRING'
         },
         {
-            name: 'deleteMessages',
+            name: 'deletemessages',
             description: 'If the messages of this user should be deleted',
             type: 'BOOLEAN'
         }
@@ -38,14 +38,8 @@ export const execute = async (client: Client, interaction: CommandInteraction): 
     const target: GuildMember = interaction.options.getMember('user', true) as GuildMember;
     const targetUser: User = target.user;
 
-    let reason = '';
-    if (interaction.options.getString('reason', false)) {
-        reason = interaction.options.getString('reason', true);
-    }
-    let purge = false;
-    if (interaction.options.getString('deletemessages', false)) {
-        purge = interaction.options.getBoolean('deletemessages', true);
-    }
+    let reason = interaction.options.getString('reason') || '';
+    let purge = interaction.options.getBoolean('deletemessages');
 
     // Check if permissions are valid
     if (!checkPermission(executor, 'BAN_MEMBERS')) return (interaction.editReply('You do not have the required permissions to kick a member.') as unknown) as void;
@@ -53,7 +47,7 @@ export const execute = async (client: Client, interaction: CommandInteraction): 
 
     // Check if messages should be purged
     if (purge) {
-        const banned: GuildMember | null = await target.ban({ days: 7, reason: reason}).catch(() => null);
+        const banned: GuildMember | null = await target.ban({ days: 7, reason }).catch(() => null);
         if (banned) {
             // Success
             guild.members.unban(targetUser);
