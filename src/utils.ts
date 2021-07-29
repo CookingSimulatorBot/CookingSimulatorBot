@@ -1,7 +1,8 @@
 import { GuildMember, Role, PermissionResolvable } from 'discord.js';
 
 export const checkPermission = (member: GuildMember, permission: PermissionResolvable): boolean => {
-    return member.permissions.has(permission) || false;
+    if (!member) return false;
+    return member.permissions.has(permission);
 };
 
 export const higherRole = (shouldBeHigher: Role, shouldBeLower: Role): boolean => {
