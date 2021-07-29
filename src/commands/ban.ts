@@ -5,6 +5,8 @@ import { checkPermission, higherRole } from '../utils.js';
 
 export const name: Command['name'] = 'ban';
 
+export const hidden: Command['hidden'] = true;
+
 export const create: Command['create'] = {
     name: 'ban',
     description: 'Bans a user! | Requires [BAN_MEMBERS]',
