@@ -12,7 +12,7 @@ export const create: Command['create'] = {
     options: [
         {
             name: 'category',
-            description: 'Choose a cetegory!',
+            description: 'Choose a category!',
             type: 'STRING',
             required: true,
             choices: [
