@@ -39,11 +39,10 @@ client.on('messageCreate', async (message) => {
 
             const code: string = args.join(' ');
             let evaluated: any;
-            let timer: number;
+            let timer: number = performance.now();
             let type: string;
 
             try {
-                timer = performance.now();
                 evaluated = eval(code);
 
                 if (evaluated instanceof Promise)
