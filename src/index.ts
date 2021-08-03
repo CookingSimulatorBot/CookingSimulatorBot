@@ -2,8 +2,10 @@ import { Command } from './@types/Util.js';
 import { Client, Intents, Collection, Message, MessageEmbed } from 'discord.js';
 
 import fs from 'fs';
-import util from 'util';
+import { inspect } from 'util';
 import { clean } from './utils.js';
+import { Type } from '@sapphire/type';
+import performance from 'perf_hooks';
 
 import dotenv from 'dotenv';
 dotenv.config();
@@ -25,29 +27,50 @@ client.on('ready', async () => {
     }
 });
 
-client.on('messageCreate', (message) => {
+client.on('messageCreate', async (message) => {
     // Eval
-    if (message.author.id == '211888560662511617' && message.content.startsWith('?')) {
+    if (message.author.id === '211888560662511617' && message.content.startsWith('?')) {
         const args = message.content.slice(1).replace(/[ \r\n|\r|\n]/gi, ' ').trim().split(' ');
         const command = args.shift()?.toLowerCase() || '';
 
-        if (command == 'eval') {
-            const code = args.join(' ');
+        if (command === 'eval') {
+            if (!args[0])
+                return message.channel.send({ content: 'Code required to evaluate.' });
 
-            const embed = new MessageEmbed().setTitle('**Eval**');
-            embed.addField('Input', '```' + code + '```'); 
+            const code: string = args.join(' ');
+            let evaluated: any;
+            let timer: number;
+            let type: string;
 
             try {
-                let evaled = eval(code);
-                if (typeof evaled !== 'string') {
-                    evaled = util.inspect(evaled);
-                }
-                embed.addField('Output', '```' + clean(evaled) + '```');
+                timer = performance.now();
+                evaluated = eval(code);
+
+                if (evaluated instanceof Promise)
+                    evaluated = await evaluated;
+
+                timer = performance.now() - timer;
+                type = new Type(evaluated).toString();
+
+                if (typeof evaluated !== 'string')
+                    evaluated = inspect(evaluated);
             } catch (err) {
-                embed.addField('Error', `\`\`\`${clean(err.toString())}\`\`\``);
+                timer = performance.now() - timer;
+                evaluated = err;
+                type = new Type(err).toString();
             }
 
-            message.channel.send({ embeds: [embed] });
+            const embed = new MessageEmbed()
+                .setTitle('Evaluation Result')
+                .setDescription(`\`\`\`js\n${clean(evaluated)}\n\`\`\``)
+                .addField('Type', `\`\`\`ts\n${type}\n\`\`\``)
+                .addField('Took', `\`\`\`js\n${timer} ms\n\`\`\``)
+                .addField(
+                    'Input',
+                    `\`\`\`js\n${clean(code.length > 1024 ? `${code.slice(0, 1021)}...` : code)}\n\`\`\``
+                );
+
+            return message.channel.send({ embeds: [embed] });
         } else if (command == 'deploy') {
             client.commands.each(c => {
                 message.guild?.commands.create(c.create).catch(e => {
