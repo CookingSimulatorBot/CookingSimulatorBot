@@ -5,7 +5,7 @@ import fs from 'fs';
 import { inspect } from 'util';
 import { clean } from './utils.js';
 import { Type } from '@sapphire/type';
-import performance from 'perf_hooks';
+import { performance } from 'perf_hooks';
 
 import dotenv from 'dotenv';
 dotenv.config();
@@ -35,7 +35,7 @@ client.on('messageCreate', async (message) => {
 
         if (command === 'eval') {
             if (!args[0])
-                return message.channel.send({ content: 'Code required to evaluate.' });
+                return void await message.channel.send({ content: 'Code required to evaluate.' });
 
             const code: string = args.join(' ');
             let evaluated: any;
@@ -70,7 +70,7 @@ client.on('messageCreate', async (message) => {
                     `\`\`\`js\n${clean(code.length > 1024 ? `${code.slice(0, 1021)}...` : code)}\n\`\`\``
                 );
 
-            return message.channel.send({ embeds: [embed] });
+            await message.channel.send({ embeds: [embed] });
         } else if (command == 'deploy') {
             client.commands.each(c => {
                 message.guild?.commands.create(c.create).catch(e => {
