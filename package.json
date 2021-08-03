@@ -18,7 +18,8 @@
     "dotenv": "^8.2.0",
     "get-cat-facts": "0.0.3",
     "random-stuff-api": "^10.0.0",
-    "tslib": "^1.14.1"
+    "tslib": "^1.14.1",
+    "@sapphire/type": "^2.0.11"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.22.0",
